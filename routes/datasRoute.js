@@ -39,5 +39,31 @@ router.post('/getitembyid',async (req,res)=>{
         return res.status(400).json({message:error})
     }
 })
-
+router.post('/edititems',async (req,res)=>{
+    const updatedItem=req.body.updatedItem
+    try{
+        const item=await Data.findOne({_id:updatedItem._id})
+        item.name=updatedItem.name;
+        item.Description=updatedItem.description;
+        item.Image=updatedItem.image;
+        item.Category=updatedItem.category;
+        item.Prices=updatedItem.prices;
+        item.varients=updatedItem.variants;
+        await item.save();
+        res.send("Item details edited successfully");
+    }
+    catch(error)
+    {
+        return res.status(400).json({message:error});
+    }
+})
+router.post('/deleteitem',async (req,res)=>{
+    const itemid=req.body.itemid
+    try {
+        await Data.findOneAndDelete({_id:itemid})
+        res.send("Pizza Deleted Successfully")
+    } catch (error) {
+        return res.status(400).json({message:error})
+    }
+})
 module.exports=router;
